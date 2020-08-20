@@ -1,0 +1,65 @@
+<extension>
+    <modules>
+        <module>
+            <id>Add Document Libarary Actions (Send-as-Email, Call WS, Show Msg, Go to Google)</id>
+            <version>1.0</version>
+            <auto-deploy>true</auto-deploy>
+            <configurations>
+                <config evaluator="string-compare" condition="DocLibActions">
+                    <actions>
+                        <action id="alfresco.doclib.action.notarize"
+                                icon="notarized"
+                                type="javascript"
+                                label="alfresco.doclib.action.notarize.label">
+                            <param name="function">onActionFormDialog</param>
+                            <param name="itemKind">action</param>
+                            <param name="itemId">notarize</param> <!-- Repository action id = Spring Bean id -->
+                            <param name="mode">create</param>
+                            <param name="destination">{node.nodeRef}</param>
+                            <param name="successMessage">alfresco.doclib.action.notarize.msg.success</param>
+                            <param name="failureMessage">alfresco.doclib.action.notarize.msg.failure</param>
+                            <evaluator negate="true">evaluator.doclib.action.notarizedAspect</evaluator>
+                        </action>
+                        <action id="alfresco.doclib.action.checkNotarization"
+                                icon="notarized"
+                                type="javascript"
+                                label="alfresco.doclib.action.checkNotarization.label">
+                            <param name="function">onActionFormDialog</param>
+                            <param name="itemKind">action</param>
+                            <param name="itemId">notarizationCheck</param> <!-- Repository action id = Spring Bean id -->
+                            <param name="mode">create</param>
+                            <param name="destination">{node.nodeRef}</param>
+                            <param name="successMessage">alfresco.doclib.action.checkNotarization.msg.success</param>
+                            <param name="failureMessage">alfresco.doclib.action.checkNotarization.msg.failure</param>
+                            <evaluator>evaluator.doclib.action.notarizedAspect</evaluator>
+                        </action>
+                    </actions>
+                    <actionGroups>
+                        <actionGroup id="document-browse">
+                            <action index="400" id="alfresco.doclib.action.checkNotarization" />
+                        </actionGroup>
+                        <actionGroup id="document-details">
+                            <action index="400" id="alfresco.doclib.action.checkNotarization" />
+                        </actionGroup>
+                        <actionGroup id="document-browse">
+                            <action index="400" id="alfresco.doclib.action.notarize" />
+                        </actionGroup>
+                        <actionGroup id="document-details">
+                            <action index="400" id="alfresco.doclib.action.notarize" />
+                        </actionGroup>
+                    </actionGroups>
+                </config>
+                <config evaluator="string-compare" condition="DocumentLibrary">
+                    <indicators>
+                        <indicator id="alfresco.indicator.notarized"
+                                   icon="notarized-16.png"
+                                   index="100"
+                                   label="alfresco.indicator.notarized.label">
+                            <evaluator>evaluator.doclib.action.notarizedAspect</evaluator>
+                        </indicator>
+                    </indicators>
+                </config>
+            </configurations>
+        </module>
+    </modules>
+</extension>
