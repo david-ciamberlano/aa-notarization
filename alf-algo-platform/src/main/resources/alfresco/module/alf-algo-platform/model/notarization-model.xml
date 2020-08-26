@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.alfresco.org/model/dictionary/1.0" name="ntr:notarizationModel">
+    <description>notarization model based on the Algorand Blockchain</description>
+    <author>Administrator</author>
+    <imports>
+        <import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d"/>
+    </imports>
+    <namespaces>
+        <namespace uri="http://www.davidlab.it/model/notarization/1.0" prefix="ntr"/>
+    </namespaces>
+    <data-types/>
+    <constraints/>
+    <types/>
+    <aspects>
+        <aspect name="ntr:notarized">
+            <title>Notarized</title>
+            <properties>
+                <property name="ntr:txid">
+                    <title>Transaction Id</title>
+                    <description>Transaction Id</description>
+                    <type>d:text</type>
+                    <mandatory>true</mandatory>
+                    <index enabled="true">
+                        <tokenised>TRUE</tokenised>
+                        <facetable>false</facetable>
+                    </index>
+                </property>
+                <property name="ntr:datetime">
+                    <title>Transaction time</title>
+                    <type>d:datetime</type>
+                    <mandatory>true</mandatory>
+                    <index enabled="true">
+                        <tokenised>TRUE</tokenised>
+                    </index>
+                </property>
+                <property name="ntr:block">
+                    <title>Block Number</title>
+                    <type>d:long</type>
+                    <mandatory>true</mandatory>
+                    <index enabled="true">
+                        <tokenised>TRUE</tokenised>
+                    </index>
+                </property>
+                <property name="ntr:address">
+                    <title>Account Address</title>
+                    <description>Account Address</description>
+                    <type>d:text</type>
+                    <mandatory>true</mandatory>
+                    <index enabled="true">
+                        <tokenised>TRUE</tokenised>
+                        <facetable>false</facetable>
+                    </index>
+                </property>
+                <property name="ntr:verificationUrl">
+                    <title>Verification URL</title>
+                    <description>Verification URL</description>
+                    <type>d:text</type>
+                    <mandatory>true</mandatory>
+                    <index enabled="true">
+                        <tokenised>TRUE</tokenised>
+                        <facetable>false</facetable>
+                    </index>
+                </property>
+                <property name="ntr:hash">
+                    <title>Content Hash</title>
+                    <description>Content Hash (sha256hex)</description>
+                    <type>d:text</type>
+                    <mandatory>true</mandatory>
+                    <index enabled="true">
+                        <tokenised>TRUE</tokenised>
+                        <facetable>false</facetable>
+                    </index>
+                </property>
+            </properties>
+            <associations/>
+            <overrides/>
+            <mandatory-aspects/>
+        </aspect>
+    </aspects>
+</model>

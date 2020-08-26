@@ -20,41 +20,24 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <!-- A simple class that is initialized by Spring -->
-    <bean id="it.davidlab.algorand.Demo" class="it.davidlab.algorand.platformsample.Demo" init-method="init" />
-
-    <!-- A simple module component that will be executed once.
-         Note. this module component will only be executed once, and then there will be an entry for it in the Repo DB.
-         So doing for example $ mvn clean install alfresco:run twice will only execute this component the first time.
-         You need to remove /alf_data_dev for it to be executed again. -->
-    <bean id="it.davidlab.algorand.DemoComponent" class="it.davidlab.algorand.platformsample.DemoComponent" parent="module.baseComponent" >
-        <property name="moduleId" value="alf-algo-platform" />  <!-- See module.properties -->
-        <property name="name" value="DemoComponent" />
-        <property name="description" value="A demonstration component" />
-        <property name="sinceVersion" value="1.0" />
-        <property name="appliesFromVersion" value="0.99" /> <!-- 1.0 would not work here when using SNAPSHOT version in project  -->
-        <property name="nodeService" ref="NodeService" />
-        <property name="nodeLocatorService" ref="nodeLocatorService" />
-    </bean>
-
     <bean id="notarize" class="it.davidlab.algorand.actions.notarizationActionExecuter" parent="action-executer">
         <property name="serviceRegistry">
             <ref bean="ServiceRegistry" />
         </property>
         <property name="ALGOD_API_ADDR">
-            <value>172.23.0.6</value>
+            <value>${algorand.api.address}</value>
         </property>
         <property name="ALGOD_PORT">
-            <value>4001</value>
+            <value>${algorand.api.port}</value>
         </property>
         <property name="ALGOD_API_TOKEN">
-            <value>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</value>
+            <value>${algorand.api.token}</value>
         </property>
         <property name="ACC_PASSFRASE">
-            <value>tourist wish message evoke other spike hill novel height sign brother cement protect network punch cricket auction lawn grab evil keep poet surprise abstract fresh</value>
+            <value>${algorand.account.passfrase}</value>
         </property>
         <property name="ACC_ADDRESS">
-            <value>PQ5OIQBSOMQU23S53MMFZG3LZVGIU6SU5TROUMWKXGYBXWLHKLII4R2LNU</value>
+            <value>${algorand.account.address}</value>
         </property>
     </bean>
 
@@ -63,19 +46,19 @@
             <ref bean="ServiceRegistry" />
         </property>
         <property name="ALGOD_API_ADDR">
-            <value>172.23.0.6</value>
+            <value>${algorand.api.address}</value>
         </property>
         <property name="ALGOD_PORT">
-            <value>4001</value>
+            <value>${algorand.api.port}</value>
         </property>
         <property name="ALGOD_API_TOKEN">
-            <value>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</value>
+            <value>${algorand.api.token}</value>
         </property>
         <property name="ACC_PASSFRASE">
-            <value>tourist wish message evoke other spike hill novel height sign brother cement protect network punch cricket auction lawn grab evil keep poet surprise abstract fresh</value>
+            <value>${algorand.account.passfrase}</value>
         </property>
         <property name="ACC_ADDRESS">
-            <value>PQ5OIQBSOMQU23S53MMFZG3LZVGIU6SU5TROUMWKXGYBXWLHKLII4R2LNU</value>
+            <value>${algorand.account.address}</value>
         </property>
     </bean>
 

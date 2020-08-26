@@ -1,7 +1,7 @@
 <extension>
     <modules>
         <module>
-            <id>Add Document Libarary Actions (Send-as-Email, Call WS, Show Msg, Go to Google)</id>
+            <id>Add Document Libarary Actions</id>
             <version>1.0</version>
             <auto-deploy>true</auto-deploy>
             <configurations>
@@ -36,10 +36,10 @@
                     </actions>
                     <actionGroups>
                         <actionGroup id="document-browse">
-                            <action index="400" id="alfresco.doclib.action.checkNotarization" />
+                            <action index="397" id="alfresco.doclib.action.checkNotarization" />
                         </actionGroup>
                         <actionGroup id="document-details">
-                            <action index="400" id="alfresco.doclib.action.checkNotarization" />
+                            <action index="397" id="alfresco.doclib.action.checkNotarization" />
                         </actionGroup>
                         <actionGroup id="document-browse">
                             <action index="400" id="alfresco.doclib.action.notarize" />
@@ -61,5 +61,61 @@
                 </config>
             </configurations>
         </module>
+
+        <module>
+            <id>CMM_notarizationModel</id>
+            <auto-deploy>true</auto-deploy>
+            <configurations>
+
+                <!-- Document Library config section -->
+                <config condition="DocumentLibrary" evaluator="string-compare" replace="false">
+                    <aspects>
+                        <visible>
+                            <aspect label="Notarized" name="ntr:notarized"/>
+                        </visible>
+                    </aspects>
+                </config>
+
+                <!-- Form configuration section - type -->
+
+                <!-- Form configuration section - aspect -->
+                <config condition="ntr:notarized" evaluator="aspect">
+                    <forms>
+                        <form>
+                            <field-visibility>
+                                <show id="ntr:datetime"/>
+                                <show id="ntr:hash"/>
+                                <show id="ntr:verificationUrl"/>
+                                <show id="ntr:block"/>
+                                <show id="ntr:txid"/>
+                                <show id="ntr:address"/>
+                            </field-visibility>
+                            <appearance>
+                                <set appearance="panel" id="ntr:notarized_cmm_set0" label-id="Notarization"/>
+                                <field id="ntr:hash" set="ntr:notarized_cmm_set0">
+                                </field>
+                                <field id="ntr:verificationUrl" set="ntr:notarized_cmm_set0">
+                                </field>
+                                <field id="ntr:address" set="ntr:notarized_cmm_set0">
+                                </field>
+                                <field id="ntr:block" set="ntr:notarized_cmm_set0">
+                                </field>
+                                <field id="ntr:txid" set="ntr:notarized_cmm_set0">
+                                </field>
+                                <field id="ntr:datetime" set="ntr:notarized_cmm_set0">
+                                </field>
+                            </appearance>
+                        </form>
+                    </forms>
+                </config>
+
+                <!-- Entity form designer configuration -->
+                <config condition="FormDefinition" evaluator="string-compare">
+                    <form-definition id="notarized">[{"elementconfig":{"label":"Notarization","appearance":"panel"},"pseudonym":"cmm/editor/layout/1cols","label":"cmm.form-editor.palette.one-column","column":[{"pseudonym":"cmm/editor/property/datetime","id":"ntr:datetime","elementconfig":{"infoname":"datetime","infolabel":"Transaction time","infotype":"d:datetime"},"label":"Transaction time [datetime]","type":["property"]},{"pseudonym":"cmm/editor/property/text","id":"ntr:hash","elementconfig":{"infoname":"hash","infolabel":"Content Hash","infotype":"d:text"},"label":"Content Hash [hash]","type":["property"]},{"pseudonym":"cmm/editor/property/text","id":"ntr:verificationUrl","elementconfig":{"infoname":"verificationUrl","infolabel":"Verification URL","infotype":"d:text"},"label":"Verification URL [verificationUrl]","type":["property"]},{"pseudonym":"cmm/editor/property/long","id":"ntr:block","elementconfig":{"infoname":"block","infolabel":"Block Number","infotype":"d:long"},"label":"Block Number [block]","type":["property"]},{"pseudonym":"cmm/editor/property/text","id":"ntr:txid","elementconfig":{"infoname":"txid","infolabel":"Transaction Id","infotype":"d:text"},"label":"Transaction Id [txid]","type":["property"]},{"pseudonym":"cmm/editor/property/text","id":"ntr:address","elementconfig":{"infoname":"address","infolabel":"Account Address","infotype":"d:text"},"label":"Account Address [address]","type":["property"]}],"type":"{type}","alfValidForm":true,"wrapperSettings":{"type":"one"}}]</form-definition>
+                </config>
+
+            </configurations>
+        </module>
+
     </modules>
 </extension>
