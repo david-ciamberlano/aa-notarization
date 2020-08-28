@@ -26,7 +26,8 @@
                                 label="alfresco.doclib.action.checkNotarization.label">
                             <param name="function">onActionFormDialog</param>
                             <param name="itemKind">action</param>
-                            <param name="itemId">notarizationCheck</param> <!-- Repository action id = Spring Bean id -->
+                            <param name="itemId">notarizationCheck
+                            </param> <!-- Repository action id = Spring Bean id -->
                             <param name="mode">create</param>
                             <param name="destination">{node.nodeRef}</param>
                             <param name="successMessage">alfresco.doclib.action.checkNotarization.msg.success</param>
@@ -36,16 +37,16 @@
                     </actions>
                     <actionGroups>
                         <actionGroup id="document-browse">
-                            <action index="397" id="alfresco.doclib.action.checkNotarization" />
+                            <action index="297" id="alfresco.doclib.action.checkNotarization"/>
                         </actionGroup>
                         <actionGroup id="document-details">
-                            <action index="397" id="alfresco.doclib.action.checkNotarization" />
+                            <action index="400" id="alfresco.doclib.action.checkNotarization"/>
                         </actionGroup>
                         <actionGroup id="document-browse">
-                            <action index="400" id="alfresco.doclib.action.notarize" />
+                            <action index="297" id="alfresco.doclib.action.notarize"/>
                         </actionGroup>
                         <actionGroup id="document-details">
-                            <action index="400" id="alfresco.doclib.action.notarize" />
+                            <action index="400" id="alfresco.doclib.action.notarize"/>
                         </actionGroup>
                     </actionGroups>
                 </config>
@@ -111,7 +112,9 @@
 
                 <!-- Entity form designer configuration -->
                 <config condition="FormDefinition" evaluator="string-compare">
-                    <form-definition id="notarized">[{"elementconfig":{"label":"Notarization","appearance":"panel"},"pseudonym":"cmm/editor/layout/1cols","label":"cmm.form-editor.palette.one-column","column":[{"pseudonym":"cmm/editor/property/datetime","id":"ntr:datetime","elementconfig":{"infoname":"datetime","infolabel":"Transaction time","infotype":"d:datetime"},"label":"Transaction time [datetime]","type":["property"]},{"pseudonym":"cmm/editor/property/text","id":"ntr:hash","elementconfig":{"infoname":"hash","infolabel":"Content Hash","infotype":"d:text"},"label":"Content Hash [hash]","type":["property"]},{"pseudonym":"cmm/editor/property/text","id":"ntr:verificationUrl","elementconfig":{"infoname":"verificationUrl","infolabel":"Verification URL","infotype":"d:text"},"label":"Verification URL [verificationUrl]","type":["property"]},{"pseudonym":"cmm/editor/property/long","id":"ntr:block","elementconfig":{"infoname":"block","infolabel":"Block Number","infotype":"d:long"},"label":"Block Number [block]","type":["property"]},{"pseudonym":"cmm/editor/property/text","id":"ntr:txid","elementconfig":{"infoname":"txid","infolabel":"Transaction Id","infotype":"d:text"},"label":"Transaction Id [txid]","type":["property"]},{"pseudonym":"cmm/editor/property/text","id":"ntr:address","elementconfig":{"infoname":"address","infolabel":"Account Address","infotype":"d:text"},"label":"Account Address [address]","type":["property"]}],"type":"{type}","alfValidForm":true,"wrapperSettings":{"type":"one"}}]</form-definition>
+                    <form-definition id="notarized">
+                        [{"elementconfig":{"label":"Notarization","appearance":"bordered-panel"},"pseudonym":"cmm/editor/layout/1cols","label":"cmm.form-editor.palette.one-column","column":[{"pseudonym":"cmm/editor/property/datetime","id":"ntr:datetime","elementconfig":{"infoname":"datetime","infolabel":"Transaction time","infotype":"d:datetime","read-only":true},"label":"Transaction time [datetime]","type":["property"]},{"pseudonym":"cmm/editor/property/text","id":"ntr:hash","elementconfig":{"infoname":"hash","infolabel":"Content Hash","infotype":"d:text","read-only":true},"label":"Content Hash [hash]","type":["property"]},{"pseudonym":"cmm/editor/property/text","id":"ntr:verificationUrl","elementconfig":{"infoname":"verificationUrl","infolabel":"Verification URL","infotype":"d:text","read-only":true},"label":"Verification URL [verificationUrl]","type":["property"]},{"pseudonym":"cmm/editor/property/long","id":"ntr:block","elementconfig":{"infoname":"block","infolabel":"Block Number","infotype":"d:long","read-only":true},"label":"Block Number [block]","type":["property"]},{"pseudonym":"cmm/editor/property/text","id":"ntr:txid","elementconfig":{"infoname":"txid","infolabel":"Transaction Id","infotype":"d:text","read-only":true},"label":"Transaction Id [txid]","type":["property"]},{"pseudonym":"cmm/editor/property/text","id":"ntr:address","elementconfig":{"infoname":"address","infolabel":"Account Address","infotype":"d:text","read-only":true},"label":"Account Address [address]","type":["property"]}],"type":"{type}","alfValidForm":true,"wrapperSettings":{"type":"one"}}]
+                    </form-definition>
                 </config>
 
             </configurations>

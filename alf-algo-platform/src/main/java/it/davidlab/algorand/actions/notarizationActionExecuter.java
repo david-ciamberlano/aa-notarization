@@ -48,6 +48,7 @@ public class notarizationActionExecuter extends ActionExecuterAbstractBase {
     private String ALGOD_API_ADDR;
     private Integer ALGOD_PORT;
     private String ALGOD_API_TOKEN;
+    private String ALGOD_EXPLORER_URL;
 
     private String ACC_PASSFRASE;
     private String ACC_ADDRESS;
@@ -135,8 +136,7 @@ public class notarizationActionExecuter extends ActionExecuterAbstractBase {
         aspectProperties.put(AlgoContentModel.blockQName, txRound);
         aspectProperties.put(AlgoContentModel.dateQName, txDate);
         aspectProperties.put(AlgoContentModel.hashQName, messageDigest);
-        aspectProperties.put(AlgoContentModel.verUrlQName,
-                "https://goalseeker.purestake.io/algorand/testnet/transaction/"+txId);
+        aspectProperties.put(AlgoContentModel.verUrlQName, ALGOD_EXPLORER_URL + txId);
 
         // if the aspect has already been added, set the properties
         if (nodeService.hasAspect(nodeRef, AlgoContentModel.notarizedAspectQName)) {
@@ -192,5 +192,7 @@ public class notarizationActionExecuter extends ActionExecuterAbstractBase {
         this.ACC_ADDRESS = ACC_ADDRESS;
     }
 
-
+    public void setALGOD_EXPLORER_URL(final String ALGOD_EXPLORER_URL) {
+        this.ALGOD_EXPLORER_URL = ALGOD_EXPLORER_URL;
+    }
 }
