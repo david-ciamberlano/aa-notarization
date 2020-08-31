@@ -37,16 +37,16 @@
                     </actions>
                     <actionGroups>
                         <actionGroup id="document-browse">
-                            <action index="297" id="alfresco.doclib.action.checkNotarization"/>
+                            <action index="10" id="alfresco.doclib.action.checkNotarization"/>
                         </actionGroup>
                         <actionGroup id="document-details">
-                            <action index="400" id="alfresco.doclib.action.checkNotarization"/>
+                            <action index="10" id="alfresco.doclib.action.checkNotarization"/>
                         </actionGroup>
                         <actionGroup id="document-browse">
-                            <action index="297" id="alfresco.doclib.action.notarize"/>
+                            <action index="10" id="alfresco.doclib.action.notarize"/>
                         </actionGroup>
                         <actionGroup id="document-details">
-                            <action index="400" id="alfresco.doclib.action.notarize"/>
+                            <action index="10" id="alfresco.doclib.action.notarize"/>
                         </actionGroup>
                     </actionGroups>
                 </config>

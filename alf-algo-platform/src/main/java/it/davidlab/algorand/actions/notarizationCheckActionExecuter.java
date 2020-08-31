@@ -90,6 +90,7 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
 
         // get info from algorand transaction
         AlgoObject algoObject;
+        String txDate;
         try {
             PendingTransactionResponse tx = algoClient.PendingTransactionInformation(propTxId).execute().body();
 
@@ -98,6 +99,13 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
             algoObject = gson.fromJson(noteObject, AlgoObject.class);
 
+            Map<String, Object> block = algoClient.GetBlock(tx.confirmedRound).execute().body().block;
+            Integer timestamp = (Integer)block.get("ts");
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            txDate = ZonedDateTime
+                    .ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.systemDefault())
+                    .format(dateFormatter);
+
         } catch (Exception ex) {
             logger.error("Algorand Client check Exception", ex);
             throw new AlfrescoRuntimeException("Document content is null", ex);
@@ -105,7 +113,7 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
 
         String validatedMsg;
         if (messageDigest.contentEquals(algoObject.getSha256hexContent())) {
-            validatedMsg = "Notarization validated";
+            validatedMsg = "Notarization validated on " + txDate;
         }
         else {
             throw new AlfrescoRuntimeException("Hash not Validated");
