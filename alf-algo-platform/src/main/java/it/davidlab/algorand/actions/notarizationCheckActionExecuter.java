@@ -55,8 +55,6 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
         NodeService nodeService = serviceRegistry.getNodeService();
 
         AlgodClient algoClient = new AlgodClient(this.ALGOD_API_ADDR, this.ALGOD_PORT, this.ALGOD_API_TOKEN);
-//        Address algoAddress = new Address(this.ACC_ADDRESS);
-//        Account algoAccount = new Account(this.ACC_PASSFRASE);
 
         // Read the document properties
         Map<QName, Serializable> nodeProperties = nodeService.getProperties(nodeRef);
@@ -67,11 +65,6 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
         String propMessageDigest = (String) nodeProperties.get(QName.createQName(
                 AlgoContentModel.NAMESPACE_NOTARIZAZION_CONTENT_MODEL,
                 AlgoContentModel.ASPECT_NRT_HASH));
-//        String propTxDatestring = (String) nodeProperties.get(QName.createQName(
-//                AlgoContentModel.NAMESPACE_NOTARIZAZION_CONTENT_MODEL,
-//                AlgoContentModel.ASPECT_NRT_DATE));
-//        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-//        ZonedDateTime propTxDate = ZonedDateTime.parse(propTxDatestring, dateFormatter);
 
         // compute sha256 on document Content
         // Get document content

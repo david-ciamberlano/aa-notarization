@@ -99,7 +99,6 @@ public class notarizationActionExecuter extends ActionExecuterAbstractBase {
             AlgodClient algoClient = new AlgodClient(this.ALGOD_API_ADDR, this.ALGOD_PORT, this.ALGOD_API_TOKEN);
             Address algoAddress = new Address(this.ACC_ADDRESS);
             Account algoAccount = new Account(this.ACC_PASSFRASE);
-
             TransactionParametersResponse params = algoClient.TransactionParams().execute().body();
             Transaction txn = Transaction.PaymentTransactionBuilder()
                     .sender(algoAddress)
