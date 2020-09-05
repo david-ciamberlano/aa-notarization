@@ -20,6 +20,7 @@
                     <description>Transaction Id</description>
                     <type>d:text</type>
                     <mandatory>true</mandatory>
+                    <protected>true</protected>
                     <index enabled="true">
                         <tokenised>TRUE</tokenised>
                         <facetable>false</facetable>
@@ -29,6 +30,7 @@
                     <title>Transaction time</title>
                     <type>d:datetime</type>
                     <mandatory>true</mandatory>
+                    <protected>true</protected>
                     <index enabled="true">
                         <tokenised>TRUE</tokenised>
                     </index>
@@ -37,6 +39,7 @@
                     <title>Block Number</title>
                     <type>d:long</type>
                     <mandatory>true</mandatory>
+                    <protected>true</protected>
                     <index enabled="true">
                         <tokenised>TRUE</tokenised>
                     </index>
@@ -46,6 +49,7 @@
                     <description>Account Address</description>
                     <type>d:text</type>
                     <mandatory>true</mandatory>
+                    <protected>true</protected>
                     <index enabled="true">
                         <tokenised>TRUE</tokenised>
                         <facetable>false</facetable>
@@ -66,6 +70,7 @@
                     <description>Content Hash (sha256hex)</description>
                     <type>d:text</type>
                     <mandatory>true</mandatory>
+                    <protected>true</protected>
                     <index enabled="true">
                         <tokenised>TRUE</tokenised>
                         <facetable>false</facetable>
