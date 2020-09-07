@@ -127,8 +127,6 @@ public class notarizationActionExecuter extends ActionExecuterAbstractBase {
             throw new AlfrescoRuntimeException("Client Exception", ex);
         }
 
-//        nodeService.setProperty(nodeRef, ContentModel.PROP_DESCRIPTION, txId);
-
         Map<QName, Serializable> aspectProperties  = new HashMap<>();
         aspectProperties.put(AlgoContentModel.txidQName, txId);
         aspectProperties.put(AlgoContentModel.addressQName, ACC_ADDRESS);
@@ -137,9 +135,9 @@ public class notarizationActionExecuter extends ActionExecuterAbstractBase {
         aspectProperties.put(AlgoContentModel.hashQName, messageDigest);
         aspectProperties.put(AlgoContentModel.verUrlQName, ALGOD_EXPLORER_URL + txId);
 
-        // if the aspect has already been added, set the properties
+        // if the aspect has already been added, throw an exception
         if (nodeService.hasAspect(nodeRef, AlgoContentModel.notarizedAspectQName)) {
-            nodeService.setProperties(nodeRef, aspectProperties);
+            throw new AlfrescoRuntimeException("Error: Document already notarized");
         } else {
             // otherwise, add the aspect and set the properties
             nodeService.addAspect(nodeRef, AlgoContentModel.notarizedAspectQName,aspectProperties);
