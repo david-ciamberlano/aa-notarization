@@ -29,6 +29,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -62,11 +63,16 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
         String propTxId = (String) nodeProperties.get(QName.createQName(
                 AlgoContentModel.NAMESPACE_NOTARIZAZION_CONTENT_MODEL,
                 AlgoContentModel.ASPECT_NRT_TXID));
+
+        // compute sha256 on document Content
         String propMessageDigest = (String) nodeProperties.get(QName.createQName(
                 AlgoContentModel.NAMESPACE_NOTARIZAZION_CONTENT_MODEL,
                 AlgoContentModel.ASPECT_NRT_HASH));
 
-        // compute sha256 on document Content
+        Date propTxDate = (Date)nodeProperties.get(QName.createQName(
+                AlgoContentModel.NAMESPACE_NOTARIZAZION_CONTENT_MODEL,
+                AlgoContentModel.ASPECT_NRT_DATE));
+
         // Get document content
         ContentReader reader = this.serviceRegistry.getContentService().getReader(nodeRef, ContentModel.PROP_CONTENT);
         InputStream originalInputStream = reader.getContentInputStream();
@@ -84,6 +90,7 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
         // get info from algorand transaction
         AlgoObject algoObject;
         String txDate;
+        Integer timestamp;
         try {
             PendingTransactionResponse tx = algoClient.PendingTransactionInformation(propTxId).execute().body();
 
@@ -93,7 +100,7 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
             algoObject = gson.fromJson(noteObject, AlgoObject.class);
 
             Map<String, Object> block = algoClient.GetBlock(tx.confirmedRound).execute().body().block;
-            Integer timestamp = (Integer)block.get("ts");
+            timestamp = (Integer)block.get("ts");
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             txDate = ZonedDateTime
                     .ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.systemDefault())
@@ -105,7 +112,9 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
         }
 
         String validatedMsg;
-        if (messageDigest.contentEquals(algoObject.getSha256hexContent())) {
+        if (messageDigest.contentEquals(algoObject.getSha256hexContent()) &&
+            propTxDate.toInstant().getEpochSecond() == timestamp ) {
+            logger.info("Notarization validated on " + txDate);
             validatedMsg = "Notarization validated on " + txDate;
         }
         else {

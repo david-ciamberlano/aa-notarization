@@ -15,7 +15,7 @@
 
 `git clone https://github.com/david-ciamberlano/aa-notarization.git`
 
-2. Run the algorand sandbox container (https:// developer.algorand.org/docs/build-apps/setup/#2-use-docker-sandbox)
+2. Run the algorand sandbox container (https://developer.algorand.org/docs/build-apps/setup/#2-use-docker-sandbox)
 
 `./sandbox up`
 
@@ -80,7 +80,7 @@ Documents can be any type of digital file (MSOffice docs, texts, images, videos,
 
 On the technical side, this extension computes the hash (sha256) of a document stored in Alfresco, builds a json object with the hash and other related metadata and creates a transaction in the Algorand blockchain. The json object is stored in the note field of the transaction and a new set of metadata related to that transaction (document hash, block id, transaction id, transaction time, account address) is associated with the document in Alfresco.
 
-To verify the validity of a notarized document, a similar process is executed: the plugin computes the document hash, retrieves the transaction from the Algorand blockchain and matches the computed hash with the one stored in the transaction. If they match, the document is still valid.
+To verify the validity of a notarized document, a similar process is executed: the plugin it st
 
 The project uses the Algorand Java SDK and the REST API v2.
 It works on Alfresco Community 6.x and the Enterprise edition 6.x
