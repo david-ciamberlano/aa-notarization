@@ -7,7 +7,8 @@
 - Docker >= 18.09.2
 - Docker Compose >= 1.23.2
 
-- Algorand sandbox (or equivalent service)
+- Algorand sandbox (or equivalent service) [optional]
+- Purestack account [optional]
 
 ## To test the project: 
 
@@ -15,9 +16,8 @@
 
 `git clone https://github.com/david-ciamberlano/aa-notarization.git`
 
-2. Run the algorand sandbox container (https://developer.algorand.org/docs/build-apps/setup/#2-use-docker-sandbox)
-
-`./sandbox up`
+2. Create a free account on Purestack (https://developer.purestake.io/) and get you **api-key** 
+(in alternative you can create your own Algorand node. See **Appendix**)
 
 3. edit the alfresco-global.property file:
 
@@ -25,14 +25,20 @@
 
 change conveniently the properties:
 ```
-algorand.api.address=<sandbox container ip>
-algorand.api.port=4001
-algorand.api.token=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 algorand.explorer.url=https://testnet.algoexplorer.io/tx/
-
-algorand.account.passfrase=<accound 12 words>
+algorand.account.passfrase=<24 worlds of your wallet>
 algorand.account.address=<account address>
+        
+algorand.api.address=https://testnet-algorand.api.purestake.io/ps2
+algorand.api.port=443
+algorand.api.indexer=https://testnet-algorand.api.purestake.io/idx2
+algorand.indexer.port=443
+
+algorand.api.token=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+purestack.api.key=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 ```
+
+(You can obtain a wallet at https://www.algorand.com/wallet or https://wallet.myalgo.com/)  
 
 4. Run Alfresco with `./run.sh build_start` or `./run.bat build_start` and verify that it
 
@@ -43,20 +49,6 @@ algorand.account.address=<account address>
  * Deploys the JAR assembled modules
  
 All the services of the project are now run as docker containers. 
-
-5. link the sandbox container to the Alfresco network
-
-`docker network connect docker_default sandbox`
-
-and take note of the ip address of the sandbox container
-
-`docker network inspect docker_default`
-
-e.g. `name: sandbox [...] "IPv4Address": "172.17.0.2/16"`
-
-if this ip address is different from the one you used in `algorand.api.address` you must replace it and reload acs
-
-`./run.sh reload_acs`
 
 6. open the Alfresco Share UI
 `localhost:8180/share` 
@@ -90,4 +82,26 @@ The relevant code (regarding Algorand) is in the following java methods:
 - src/main/java/it/davidlab/algorand/actions/notarizationCheckActionExecuter.java
 
 
+
+## Appendix
+
+### Run your own Algorand node
+
+1. Run the algorand sandbox container (https://developer.algorand.org/docs/build-apps/setup/#2-use-docker-sandbox)
+
+`./sandbox up`
+
+2. link the sandbox container to the Alfresco network
+
+`docker network connect docker_default sandbox`
+
+and take note of the ip address of the sandbox container
+
+`docker network inspect docker_default`
+
+e.g. `name: sandbox [...] "IPv4Address": "172.17.0.2/16"`
+
+if this ip address is different from the one you used in `algorand.api.address` you must replace it and reload acs
+
+`./run.sh reload_acs`
  

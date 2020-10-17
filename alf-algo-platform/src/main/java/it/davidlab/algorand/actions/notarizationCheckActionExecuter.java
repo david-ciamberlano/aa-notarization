@@ -1,12 +1,14 @@
 package it.davidlab.algorand.actions;
 
-import com.algorand.algosdk.account.Account;
-import com.algorand.algosdk.crypto.Address;
+
+import com.algorand.algosdk.algod.client.model.TransactionResults;
 import com.algorand.algosdk.v2.client.common.AlgodClient;
+import com.algorand.algosdk.v2.client.common.IndexerClient;
 import com.algorand.algosdk.v2.client.model.PendingTransactionResponse;
+import com.algorand.algosdk.v2.client.model.Transaction;
+import com.algorand.algosdk.v2.client.model.TransactionsResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sun.xml.messaging.saaj.util.ByteInputStream;
 import org.alfresco.error.AlfrescoRuntimeException;
 import org.alfresco.model.ContentModel;
 import org.alfresco.repo.action.executer.ActionExecuterAbstractBase;
@@ -21,6 +23,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +32,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -44,18 +48,23 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
 
     private String ALGOD_API_ADDR;
     private Integer ALGOD_PORT;
+    private String ALGOD_API_INDEXER_ADDR;
+    private Integer ALGOD_INDEXER_PORT;
     private String ALGOD_API_TOKEN;
 
-    private String ACC_PASSFRASE;
-    private String ACC_ADDRESS;
+    private String PS_API_KEY;
 
 
     @Override
     protected void executeImpl(Action action, NodeRef nodeRef) {
 
         NodeService nodeService = serviceRegistry.getNodeService();
+        String[] headers_keys = {"x-api-key"};
+        String[] headers_values = {PS_API_KEY};
 
         AlgodClient algoClient = new AlgodClient(this.ALGOD_API_ADDR, this.ALGOD_PORT, this.ALGOD_API_TOKEN);
+
+        IndexerClient indexerClient = new IndexerClient(ALGOD_API_INDEXER_ADDR, ALGOD_INDEXER_PORT);
 
         // Read the document properties
         Map<QName, Serializable> nodeProperties = nodeService.getProperties(nodeRef);
@@ -69,7 +78,7 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
                 AlgoContentModel.NAMESPACE_NOTARIZAZION_CONTENT_MODEL,
                 AlgoContentModel.ASPECT_NRT_HASH));
 
-        Date propTxDate = (Date)nodeProperties.get(QName.createQName(
+        Date propTxDate = (Date) nodeProperties.get(QName.createQName(
                 AlgoContentModel.NAMESPACE_NOTARIZAZION_CONTENT_MODEL,
                 AlgoContentModel.ASPECT_NRT_DATE));
 
@@ -90,20 +99,20 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
         // get info from algorand transaction
         AlgoObject algoObject;
         String txDate;
-        Integer timestamp;
+        long timestamp;
         try {
-            PendingTransactionResponse tx = algoClient.PendingTransactionInformation(propTxId).execute().body();
 
-            byte[] txNote = tx.txn.tx.note;
-            String noteObject = new String(txNote);
+            Transaction tx = indexerClient.searchForTransactions().txid(propTxId)
+                    .execute(headers_keys, headers_values).body().transactions.get(0);
+
+            timestamp = tx.roundTime;
+
+            String noteObject = new String(tx.note);
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
             algoObject = gson.fromJson(noteObject, AlgoObject.class);
 
-            Map<String, Object> block = algoClient.GetBlock(tx.confirmedRound).execute().body().block;
-            timestamp = (Integer)block.get("ts");
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-            txDate = ZonedDateTime
-                    .ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.systemDefault())
+            txDate = ZonedDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.systemDefault())
                     .format(dateFormatter);
 
         } catch (Exception ex) {
@@ -113,11 +122,10 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
 
         String validatedMsg;
         if (messageDigest.contentEquals(algoObject.getSha256hexContent()) &&
-            propTxDate.toInstant().getEpochSecond() == timestamp ) {
+                propTxDate.toInstant().getEpochSecond() == timestamp) {
             logger.info("Notarization validated on " + txDate);
             validatedMsg = "Notarization validated on " + txDate;
-        }
-        else {
+        } else {
             throw new AlfrescoRuntimeException("Hash not Validated");
         }
 
@@ -139,6 +147,10 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
         this.ALGOD_API_ADDR = ALGOD_API_ADDR;
     }
 
+    public void setALGOD_API_INDEXER_ADDR(final String ALGOD_API_INDEXER_ADDR) {
+        this.ALGOD_API_INDEXER_ADDR = ALGOD_API_INDEXER_ADDR;
+    }
+
     public void setALGOD_PORT(final Integer ALGOD_PORT) {
         this.ALGOD_PORT = ALGOD_PORT;
     }
@@ -147,11 +159,11 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
         this.ALGOD_API_TOKEN = ALGOD_API_TOKEN;
     }
 
-    public void setACC_PASSFRASE(final String ACC_PASSFRASE) {
-        this.ACC_PASSFRASE = ACC_PASSFRASE;
+    public void setPS_API_KEY(final String PS_API_KEY) {
+        this.PS_API_KEY = PS_API_KEY;
     }
 
-    public void setACC_ADDRESS(final String ACC_ADDRESS) {
-        this.ACC_ADDRESS = ACC_ADDRESS;
+    public void setALGOD_INDEXER_PORT(final Integer ALGOD_INDEXER_PORT) {
+        this.ALGOD_INDEXER_PORT = ALGOD_INDEXER_PORT;
     }
 }

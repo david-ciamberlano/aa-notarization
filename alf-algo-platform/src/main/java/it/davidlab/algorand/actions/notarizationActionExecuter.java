@@ -21,6 +21,7 @@ import org.alfresco.service.cmr.repository.NodeService;
 import org.alfresco.service.namespace.QName;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -38,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 
 
-
 public class notarizationActionExecuter extends ActionExecuterAbstractBase {
 
     private static Log logger = LogFactory.getLog(notarizationActionExecuter.class);
@@ -52,6 +52,10 @@ public class notarizationActionExecuter extends ActionExecuterAbstractBase {
 
     private String ACC_PASSFRASE;
     private String ACC_ADDRESS;
+    private String PS_API_KEY;
+
+    private String[] headers_keys = {"x-api-key"};
+    private String[] headers_values;
 
 
     @Override
@@ -99,7 +103,8 @@ public class notarizationActionExecuter extends ActionExecuterAbstractBase {
             AlgodClient algoClient = new AlgodClient(this.ALGOD_API_ADDR, this.ALGOD_PORT, this.ALGOD_API_TOKEN);
             Address algoAddress = new Address(this.ACC_ADDRESS);
             Account algoAccount = new Account(this.ACC_PASSFRASE);
-            TransactionParametersResponse params = algoClient.TransactionParams().execute().body();
+            TransactionParametersResponse params = algoClient.TransactionParams()
+                    .execute(headers_keys,headers_values).body();
             Transaction txn = Transaction.PaymentTransactionBuilder()
                     .sender(algoAddress)
                     .note(algoJsonObjct.getBytes())
@@ -110,12 +115,21 @@ public class notarizationActionExecuter extends ActionExecuterAbstractBase {
 
             SignedTransaction signedTxn = algoAccount.signTransaction(txn);
             byte[] encodedTxBytes = Encoder.encodeToMsgPack(signedTxn);
-            txId = algoClient.RawTransaction().rawtxn(encodedTxBytes).execute().body().txId;
+
+            //the following transaction needs an additional header
+            String[] headers_keys_2 = ArrayUtils.add(headers_keys, "Content-Type");
+            String[] headers_values_2 = ArrayUtils.add(headers_values, "application/x-binary");
+
+            txId = algoClient.RawTransaction().rawtxn(encodedTxBytes)
+                    .execute(headers_keys_2,headers_values_2).body().txId;
             this.waitForConfirmation(algoClient, txId, 5);
 
-            txRound = algoClient.PendingTransactionInformation(txId).execute().body().confirmedRound;
+            txRound = algoClient.PendingTransactionInformation(txId)
+                    .execute(headers_keys,headers_values).body().confirmedRound;
 
-            Map<String, Object> block = algoClient.GetBlock(txRound).execute().body().block;
+            Map<String, Object> block = algoClient.GetBlock(txRound)
+                    .execute(headers_keys,headers_values).body().block;
+
             Integer timestamp = (Integer)block.get("ts");
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             txDate = ZonedDateTime
@@ -152,13 +166,15 @@ public class notarizationActionExecuter extends ActionExecuterAbstractBase {
     }
 
     private void waitForConfirmation(AlgodClient algoClient, String txId, int counter) throws Exception {
-        long currentRound = algoClient.GetStatus().execute().body().lastRound;
+        long currentRound = algoClient.GetStatus()
+                .execute(headers_keys,headers_values).body().lastRound;
         long maxRound = currentRound + counter;
 
         Long txConfirmedRound;
         do {
-            algoClient.WaitForBlock(currentRound).execute();
-            txConfirmedRound = algoClient.PendingTransactionInformation(txId).execute().body().confirmedRound;
+            algoClient.WaitForBlock(currentRound).execute(headers_keys,headers_values);
+            txConfirmedRound = algoClient.PendingTransactionInformation(txId)
+                    .execute(headers_keys,headers_values).body().confirmedRound;
             currentRound++;
         }
         while (((txConfirmedRound == null) || (txConfirmedRound <= 0)) && (currentRound <= maxRound));
@@ -191,5 +207,10 @@ public class notarizationActionExecuter extends ActionExecuterAbstractBase {
 
     public void setALGOD_EXPLORER_URL(final String ALGOD_EXPLORER_URL) {
         this.ALGOD_EXPLORER_URL = ALGOD_EXPLORER_URL;
+    }
+
+    public void setPS_API_KEY(final String PS_API_KEY) {
+        this.PS_API_KEY = PS_API_KEY;
+        this.headers_values = new String[] {PS_API_KEY};
     }
 }
