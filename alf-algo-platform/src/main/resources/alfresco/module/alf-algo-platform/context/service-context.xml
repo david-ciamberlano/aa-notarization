@@ -42,9 +42,6 @@
         <property name="ACC_ADDRESS">
             <value>${algorand.account.address}</value>
         </property>
-        <property name="PS_API_KEY">
-            <value>${purestack.api.key}</value>
-        </property>
     </bean>
 
     <bean id="notarizationCheck" class="it.davidlab.algorand.actions.notarizationCheckActionExecuter" parent="action-executer">
@@ -65,9 +62,6 @@
         </property>
         <property name="ALGOD_API_TOKEN">
             <value>${algorand.api.token}</value>
-        </property>
-        <property name="PS_API_KEY">
-            <value>${purestack.api.key}</value>
         </property>
 
     </bean>

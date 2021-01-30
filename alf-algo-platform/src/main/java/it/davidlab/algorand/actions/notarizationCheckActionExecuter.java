@@ -42,7 +42,7 @@ import java.util.Map;
  */
 public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase {
 
-    private static Log logger = LogFactory.getLog(notarizationCheckActionExecuter.class);
+    private Log logger = LogFactory.getLog(notarizationCheckActionExecuter.class);
 
     private ServiceRegistry serviceRegistry;
 
@@ -52,15 +52,12 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
     private Integer ALGOD_INDEXER_PORT;
     private String ALGOD_API_TOKEN;
 
-    private String PS_API_KEY;
 
 
     @Override
     protected void executeImpl(Action action, NodeRef nodeRef) {
 
         NodeService nodeService = serviceRegistry.getNodeService();
-        String[] headers_keys = {"x-api-key"};
-        String[] headers_values = {PS_API_KEY};
 
         AlgodClient algoClient = new AlgodClient(this.ALGOD_API_ADDR, this.ALGOD_PORT, this.ALGOD_API_TOKEN);
 
@@ -102,8 +99,7 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
         long timestamp;
         try {
 
-            Transaction tx = indexerClient.searchForTransactions().txid(propTxId)
-                    .execute(headers_keys, headers_values).body().transactions.get(0);
+            Transaction tx = indexerClient.searchForTransactions().txid(propTxId).execute().body().transactions.get(0);
 
             timestamp = tx.roundTime;
 
@@ -157,10 +153,6 @@ public class notarizationCheckActionExecuter extends ActionExecuterAbstractBase 
 
     public void setALGOD_API_TOKEN(final String ALGOD_API_TOKEN) {
         this.ALGOD_API_TOKEN = ALGOD_API_TOKEN;
-    }
-
-    public void setPS_API_KEY(final String PS_API_KEY) {
-        this.PS_API_KEY = PS_API_KEY;
     }
 
     public void setALGOD_INDEXER_PORT(final Integer ALGOD_INDEXER_PORT) {

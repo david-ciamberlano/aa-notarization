@@ -9,6 +9,7 @@
 
 - Algorand sandbox (or equivalent service) [optional]
 - Purestack account [optional]
+- 
 
 ## To test the project: 
 
@@ -29,13 +30,13 @@ algorand.explorer.url=https://testnet.algoexplorer.io/tx/
 algorand.account.passfrase=<24 worlds of your wallet>
 algorand.account.address=<account address>
         
-algorand.api.address=https://testnet-algorand.api.purestake.io/ps2
+algorand.api.address=https://api.testnet.algoexplorer.io/
 algorand.api.port=443
-algorand.api.indexer=https://testnet-algorand.api.purestake.io/idx2
+algorand.api.indexer=https://api.testnet.algoexplorer.io/idx2
 algorand.indexer.port=443
 
-algorand.api.token=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-purestack.api.key=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+algorand.api.token=
+
 ```
 
 (You can obtain a wallet at https://www.algorand.com/wallet or https://wallet.myalgo.com/)  
